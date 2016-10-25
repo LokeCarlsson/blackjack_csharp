@@ -12,12 +12,39 @@ namespace BlackJack.model
 
         private rules.INewGameStrategy m_newGameRule;
         private rules.IHitStrategy m_hitRule;
+        private rules.IWinStrategy m_winStrategy;
 
 
-        public Dealer(rules.RulesFactory a_rulesFactory)
+        //public Dealer(rules.RulesFactory a_rulesFactory)
+        //{
+        //    m_newGameRule = a_rulesFactory.GetNewGameRule();
+
+        //    // Choose hit rule.
+        //    //m_hitRule = a_rulesFactory.GetHitRule();
+        //    m_hitRule = a_rulesFactory.GetSoftHitStrategy();
+
+        //    // Choose win strategy
+
+        //}
+
+        public Dealer(rules.INewGameStrategy a_gameStrategy, rules.IHitStrategy a_hitStrategy, rules.IWinStrategy a_winStrategy)
         {
-            m_newGameRule = a_rulesFactory.GetNewGameRule();
-            m_hitRule = a_rulesFactory.GetHitRule();
+            m_newGameRule = a_gameStrategy;
+            m_hitRule = a_hitStrategy;
+            m_winStrategy = a_winStrategy;
+        }
+
+        public bool Stand()
+        {
+            if (m_deck == null) return false;
+            ShowHand();
+            while (m_hitRule.DoHit(this))
+            {
+                Card c = m_deck.GetCard();
+                c.Show(true);
+                DealCard(c);
+            }
+            return true;
         }
 
         public bool NewGame(Player a_player)
@@ -34,7 +61,7 @@ namespace BlackJack.model
 
         public bool Hit(Player a_player)
         {
-            if (m_deck != null && a_player.CalcScore() < g_maxScore && !IsGameOver())
+            if (CheckScore(a_player))
             {
                 Card c;
                 c = m_deck.GetCard();
@@ -46,6 +73,12 @@ namespace BlackJack.model
             return false;
         }
 
+        private bool CheckScore(Player player)
+        {
+            return m_deck != null && player.CalcScore() < g_maxScore && !IsGameOver();
+        }
+
+
         public bool IsDealerWinner(Player a_player)
         {
             if (a_player.CalcScore() > g_maxScore)
@@ -56,7 +89,8 @@ namespace BlackJack.model
             {
                 return false;
             }
-            return CalcScore() >= a_player.CalcScore();
+            //return CalcScore() >= a_player.CalcScore();
+            return m_winStrategy.Winner(a_player, this);
         }
 
         public bool IsGameOver()

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using BlackJack.model.rules;
 
 namespace BlackJack.model
 {
@@ -9,10 +10,14 @@ namespace BlackJack.model
     {
         private model.Dealer m_dealer;
         private model.Player m_player;
+        private model.rules.RulesFactory m_rulesFactory;
 
         public Game()
         {
-            m_dealer = new Dealer(new rules.RulesFactory());
+            m_rulesFactory = new RulesFactory();
+            m_dealer = new Dealer(m_rulesFactory.GetNewGameRule(), 
+                                  m_rulesFactory.GetSoftHitStrategy(), 
+                                  m_rulesFactory.GetDealerEqualWinStrategy() /* Change here for win strategy */);
             m_player = new Player();
         }
 
@@ -38,8 +43,8 @@ namespace BlackJack.model
 
         public bool Stand()
         {
-            // TODO: Implement this according to Game_Stand.sequencediagram
-            return true;
+
+            return m_dealer.Stand();
         }
 
         public IEnumerable<Card> GetDealerHand()
