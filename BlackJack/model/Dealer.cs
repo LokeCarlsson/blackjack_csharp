@@ -8,24 +8,13 @@ namespace BlackJack.model
     class Dealer : Player
     {
         private Deck m_deck = null;
+        private Card m_card = null;
         private const int g_maxScore = 21;
 
         private rules.INewGameStrategy m_newGameRule;
         private rules.IHitStrategy m_hitRule;
         private rules.IWinStrategy m_winStrategy;
 
-
-        //public Dealer(rules.RulesFactory a_rulesFactory)
-        //{
-        //    m_newGameRule = a_rulesFactory.GetNewGameRule();
-
-        //    // Choose hit rule.
-        //    //m_hitRule = a_rulesFactory.GetHitRule();
-        //    m_hitRule = a_rulesFactory.GetSoftHitStrategy();
-
-        //    // Choose win strategy
-
-        //}
 
         public Dealer(rules.INewGameStrategy a_gameStrategy, rules.IHitStrategy a_hitStrategy, rules.IWinStrategy a_winStrategy)
         {
@@ -34,15 +23,21 @@ namespace BlackJack.model
             m_winStrategy = a_winStrategy;
         }
 
+
+        public void AddCard(bool a_isHidden, Player a_player)
+        {
+            m_card = m_deck.GetCard();
+            m_card.Show(a_isHidden);
+            a_player.DealCard(m_card);
+        }
+
         public bool Stand()
         {
             if (m_deck == null) return false;
             ShowHand();
             while (m_hitRule.DoHit(this))
             {
-                Card c = m_deck.GetCard();
-                c.Show(true);
-                DealCard(c);
+                AddCard(true, this);
             }
             return true;
         }
@@ -63,11 +58,8 @@ namespace BlackJack.model
         {
             if (CheckScore(a_player))
             {
-                Card c;
-                c = m_deck.GetCard();
-                c.Show(true);
-                a_player.DealCard(c);
-
+                AddCard(true, a_player);
+                                
                 return true;
             }
             return false;
@@ -89,7 +81,6 @@ namespace BlackJack.model
             {
                 return false;
             }
-            //return CalcScore() >= a_player.CalcScore();
             return m_winStrategy.Winner(a_player, this);
         }
 

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BlackJack.model
 {
-    class Card
+    public class Card
     {
         public enum Color
         {

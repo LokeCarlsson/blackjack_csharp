@@ -11,7 +11,6 @@ namespace BlackJack.model
         private model.Dealer m_dealer;
         private model.Player m_player;
         private model.rules.RulesFactory m_rulesFactory;
-
         public Game()
         {
             m_rulesFactory = new RulesFactory();
@@ -19,13 +18,19 @@ namespace BlackJack.model
                                   m_rulesFactory.GetSoftHitStrategy(), 
                                   m_rulesFactory.GetDealerEqualWinStrategy() /* Change here for win strategy */);
             m_player = new Player();
+
+        }
+
+        public void AddSubscriber(IObserver a_obs)
+        {
+            m_player.AddSubscriber(a_obs);
+            m_dealer.AddSubscriber(a_obs);
         }
 
         public bool IsGameOver()
         {
             return m_dealer.IsGameOver();
         }
-
         public bool IsDealerWinner()
         {
             return m_dealer.IsDealerWinner(m_player);
