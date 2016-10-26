@@ -12,7 +12,19 @@ namespace BlackJack.view
         {
             System.Console.Clear();
             System.Console.WriteLine("Hello Black Jack World");
-            System.Console.WriteLine("Type 'p' to Play, 'h' to Hit, 's' to Stand or 'q' to Quit\n");
+            Console.WriteLine(DisplayGameInstructions());
+
+        }
+
+        public string DisplayGameInstructions()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("Type '{0}' to Play, ", (char)GameEvent.Play);
+            sb.AppendFormat("'{0}' to Hit, ", (char)GameEvent.Hit);
+            sb.AppendFormat("'{0}' to Stand, ", (char)GameEvent.Stand);
+            sb.AppendFormat("or '{0}' to Quit\n", (char)GameEvent.Quit);
+
+            return sb.ToString();
         }
 
         public int GetInput()
