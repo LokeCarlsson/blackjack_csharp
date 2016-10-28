@@ -9,6 +9,7 @@ namespace BlackJack.controller
 {
     class PlayGame : IObserver
     {
+        private const int PAUSE_TIME = 1000; // Time in MS
         private IView m_view;
         private model.Game m_game;
         public PlayGame(model.Game a_game, view.IView a_view)
@@ -54,15 +55,7 @@ namespace BlackJack.controller
 
         public bool Play()
         {
-            m_view.DisplayWelcomeMessage();
-            m_view.DisplayDealerHand(m_game.GetDealerHand(), m_game.GetDealerScore());
-            m_view.DisplayPlayerHand(m_game.GetPlayerHand(), m_game.GetPlayerScore());
-
-
-            if (m_game.IsGameOver())
-            {
-                m_view.DisplayGameOver(m_game.IsDealerWinner());
-            }
+            PresentHands();
 
             int input = m_view.GetInput();
 
@@ -84,7 +77,12 @@ namespace BlackJack.controller
 
         public void ShowCard(model.Card a_card)
         {
-            System.Threading.Thread.Sleep(1000);
+            Pause();
+            PresentHands();
+        }
+
+        private void PresentHands()
+        {
             m_view.DisplayWelcomeMessage();
             m_view.DisplayDealerHand(m_game.GetDealerHand(), m_game.GetDealerScore());
             m_view.DisplayPlayerHand(m_game.GetPlayerHand(), m_game.GetPlayerScore());
@@ -95,5 +93,11 @@ namespace BlackJack.controller
                 m_view.DisplayGameOver(m_game.IsDealerWinner());
             }
         }
+
+        private void Pause()
+        {
+            System.Threading.Thread.Sleep(PAUSE_TIME);
+        }
+
     }
 }
