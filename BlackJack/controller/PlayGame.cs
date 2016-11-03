@@ -75,7 +75,7 @@ namespace BlackJack.controller
             return input != (char)GameEvent.Quit;
         }
 
-        public void ShowCard(model.Card a_card)
+        public void ShowCard()
         {
             Pause();
             PresentHands();

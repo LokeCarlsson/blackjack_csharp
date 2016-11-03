@@ -9,6 +9,7 @@ namespace BlackJack.model.rules
     {
         public bool NewGame(Deck a_deck, Dealer a_dealer, Player a_player)
         {
+
             a_dealer.AddCard(true, a_player);
             
             a_dealer.AddCard(true, a_dealer);

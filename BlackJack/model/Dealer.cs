@@ -26,6 +26,8 @@ namespace BlackJack.model
 
         public void AddCard(bool a_isHidden, Player a_player)
         {
+
+
             m_card = m_deck.GetCard();
             m_card.Show(a_isHidden);
             a_player.DealCard(m_card);

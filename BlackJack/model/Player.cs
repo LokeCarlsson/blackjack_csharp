@@ -25,7 +25,7 @@ namespace BlackJack.model
             m_hand.Add(a_card);
             foreach (IObserver observer in m_subscribers)
             {
-                observer.ShowCard(a_card);
+                observer.ShowCard();
             }
         }
 
